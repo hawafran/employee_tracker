@@ -18,7 +18,7 @@ const start = () => {
     console.log("employee tracker")
 inquirer 
 .prompt ({
-    name: AddViewUpdate,
+    name: choices,
     type: list,
     message: "would you like to Add employees, View employees, or update employee roster?",
     Choices: ["Add", "View", "Update"],
@@ -88,6 +88,35 @@ function viewDepartments() {
             start()
         }
     )
+}
+
+function addEmployee() { 
+    inquirer.prompt([
+        {
+          name: "firstname",
+          type: "input",
+          message: "Enter first name "
+        },
+        {
+          name: "lastname",
+          type: "input",
+          message: "Enter last name "
+        },
+        {
+          name: "role",
+          type: "input",
+          message: "What is their role? ",
+        }
+    ])
+    .then((answer) => {
+        connection.query(
+            `INSERT INTO employees(first_name, last_name, role_id) VALUES(?, ?, 
+            (SELECT id FROM roles WHERE title = ? ), 
+            (SELECT id FROM (SELECT id FROM employees WHERE CONCAT(first_name," ",last_name) = ? ) AS tmptable))`, [answer.first_ame, answer.last_name, answer.role]
+        )
+        start();
+    })
+
 }
 
 connection.connect((err) => {
