@@ -50,7 +50,7 @@ const initiateApp = async () => {
             break;
 
         case 'Add Employees':
-            employeeAdd();
+            addEmployee();
             break
 
         case 'Add Departments':
@@ -109,7 +109,82 @@ const employeeView = async () => {
       initiateApp();
   };
   }
-  
+  // Selection to view all of the roles.
+  const roleView = async () => {
+    console.log('Role View');
+    try {
+        let query = 'SELECT * FROM role';
+        connection.query(query, function (err, res) {
+            if (err) throw err;
+            let roleArray = [];
+            res.forEach(role => roleArray.push(role));
+            console.table(roleArray);
+            initiateApp();
+        });
+    } catch (err) {
+        console.log(err);
+        initiateApp();
+    };
+    }
+    
+    
+    const addEmployee = async () => {
+    try {
+    
+        let roles = await connection.query("SELECT * FROM role");
+    
+    
+    
+        let answer = await inquirer.prompt([
+            {
+                name: 'firstName',
+                type: 'input',
+                message: 'Employee First Name'
+            },
+            {
+                name: 'lastName',
+                type: 'input',
+                message: 'Employee Last Name'
+            },
+            {
+                name: 'Employee Role',
+                type: 'list',
+                choices: roles.map((role) => {
+                    return {
+                        name: role.title,
+                        
+                    }
+                }),
+                message: "Employee Role"
+            },
+            {
+                name: 'Employee ID',
+                type: 'list',
+                choices: id.map((employee) => {
+                    return {
+                        name: employee.first_name + " " + employee.last_name,
+                        value: employee.id
+                    }
+                }),
+                message: "Employee ID"
+            }
+        ])
+    
+        let result = await connection.query("Add to employee list ?", {
+            first_name: answer.firstName,
+            last_name: answer.lastName,
+            role: (answer.role),
+            id: (answer.id)
+        });
+    
+    
+    } catch (err) {
+        console.log(err);
+        initiateApp();
+    };
+    }
+    
+    
   
 };
 }
