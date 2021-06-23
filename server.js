@@ -54,7 +54,7 @@ const initiateApp = async () => {
             break
 
         case 'Add Departments':
-            departmentAdd();
+            addDepartment();
             break
 
         case 'Add Roles':
@@ -184,6 +184,29 @@ const employeeView = async () => {
     };
     }
     
+    // Selection to add a new department.
+    const addDepartment = async () => {
+      try {
+      
+          let answer = await inquirer.prompt([
+              {
+                  name: 'deptName',
+                  type: 'input',
+                  message: 'Department Name?'
+              }
+          ]);
+      
+          let result = await connection.query("Add to list?", {
+              department_name: answer.deptName
+          });
+      
+      } catch (err) {
+          console.log(err);
+          initiateApp();
+      };
+      }
+      
+      
     
   
 };
