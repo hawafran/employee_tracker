@@ -36,5 +36,80 @@ const initiateApp = async () => {
               'Exit'
           ]
       });
-      
+      switch (answer.action) {
+        case 'View Employees':
+            employeeView();
+            break;
+
+        case 'View Departments':
+            viewDept();
+            break;
+
+        case 'View Roles':
+            roleView();
+            break;
+
+        case 'Add Employees':
+            employeeAdd();
+            break
+
+        case 'Add Departments':
+            departmentAdd();
+            break
+
+        case 'Add Roles':
+            roleAdd();
+            break
+
+        case 'Update Employee Role':
+            employeeUpdate();
+            break
+
+        case 'Exit':
+            connection.end();
+            break;
+    };
+} catch (err) {
+    console.log(err);
+    initiateApp();
+};
+}
+// Selection to view all of the employees.
+const employeeView = async () => {
+  console.log('Employee View');
+  try {
+      let query = 'SELECT * FROM employee';
+      connection.query(query, function (err, res) {
+          if (err) throw err;
+          let employeeArray = [];
+          res.forEach(employee => employeeArray.push(employee));
+          console.table(employeeArray);
+          initiateApp();
+      });
+  } catch (err) {
+      console.log(err);
+      initiateApp();
+  };
+  }
+  
+
+  const viewDept = async () => {
+    
+  try {
+      let query = 'SELECT * FROM department';
+      connection.query(query, function (err, res) {
+          if (err) throw err;
+          let departmentArray = [];
+          res.forEach(department => departmentArray.push(department));
+          console.table(departmentArray);
+          initiateApp();
+      });
+  } catch (err) {
+      console.log(err);
+      initiateApp();
+  };
+  }
+  
+  
+};
 }
