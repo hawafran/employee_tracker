@@ -62,7 +62,7 @@ const initiateApp = async () => {
             break
 
         case 'Update Employee Role':
-            employeeUpdate();
+            updateEmployee();
             break
 
         case 'Exit':
@@ -244,6 +244,51 @@ const employeeView = async () => {
             initiateApp();
         };
         }
+
+        const updateEmployee = async () => {
+          try {
+           
+              
+              let employees = await connection.query("SELECT * FROM employee");
+          
+              let selectemployee = await inquirer.prompt([
+                  {
+                      name: 'employee',
+                      type: 'list',
+                      choices: employees.map((employeeName) => {
+                          return {
+                              name: employeeName.first_name + " " + employeeName.last_name,
+                              value: employeeName.id
+                          }
+                      }),
+                      message: 'Choose employee to update.'
+                  }
+              ]);
+          
+              let roles = await connection.query("SELECT * FROM role");
+          
+              let roleSelection = await inquirer.prompt([
+                  {
+                      name: 'role',
+                      type: 'list',
+                      choices: roles.map((roleName) => {
+                          return {
+                              name: roleName.title,
+                              value: roleName.id
+                          }
+                      }),
+                      message: 'Please select the role.'
+                  }
+              ]);
+          
+              let result = await connection.query("Update employee?", [{ role_id: roleSelection.role }, { id: selectemployee.employee }]);
+          
+              console.log(`The employee was successfully updated.\n`);
+              initiateApp();
+          
+          } catch (err) {
+              console.log(err);
+              initiateApp();
   
     
   
