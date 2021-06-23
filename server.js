@@ -58,7 +58,7 @@ const initiateApp = async () => {
             break
 
         case 'Add Roles':
-            roleAdd();
+            addRole();
             break
 
         case 'Update Employee Role':
@@ -206,7 +206,45 @@ const employeeView = async () => {
       };
       }
       
-      
+      const addRole = async () => {
+        try {
+
+        
+            let departments = await connection.query("SELECT * FROM department")
+        
+            let answer = await inquirer.prompt([
+                {
+                    name: 'title',
+                    type: 'input',
+                    message: 'Role?'
+                },
+                {
+                    name: 'salary',
+                    type: 'input',
+                    message: 'Salary?'
+                },
+            ]);
+            
+            let chosenDepartment;
+            for (i = 0; i < departments.length; i++) {
+                if(departments[i].department_id === answer.choice) {
+                    chosenDepartment = departments[i];
+                };
+            }
+            let result = await connection.query("Add to list?", {
+                title: answer.title,
+                salary: answer.salary,
+            })
+        
+            console.log(`${answer.title} role added successfully.\n`)
+            initiateApp();
+        
+        } catch (err) {
+            console.log(err);
+            initiateApp();
+        };
+        }
+  
     
   
 };
